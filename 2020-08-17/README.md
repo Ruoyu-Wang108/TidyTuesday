@@ -8,7 +8,9 @@ Find more codes on [hrbrmstr/waffle](https://github.com/hrbrmstr/waffle)
 
 1. When the counts are large, the square will become extremely small
 
-2. not suitable to work with elements > 3, especially when the quantity are close. When there are a lot of elements in one waffle bar, the color becomes burr and hard to identify or differeniate.
+2. not suitable to work with elements > 5, especially when the quantity are close. When there are a lot of elements in one waffle bar, the color becomes burr and hard to identify or differeniate.
+
+3. It took forever to make a plot
 
 ### Important codes:
 
