@@ -1,0 +1,74 @@
+---
+title: '2020-08-17'
+author: "Ruoyu"
+date: "8/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+
+library(tidytuesdayR)
+library(tidyverse)
+library(skimr)
+library(waffle)
+library(dplyr)
+```
+
+```{r data}
+tuesdata <- tidytuesdayR::tt_load('2020-08-18')
+
+plants <- tuesdata$plants
+
+threats <- tuesdata$threats
+
+actions <- tuesdata$actions
+```
+
+```{r extinct_country}
+extinct_country <- plants %>% 
+  select(-c(threat_AA:action_NA)) %>% 
+  filter(red_list_category == "Extinct") 
+
+extinct_country_tidy <- extinct_country %>% 
+  count(country) %>%  
+  mutate(country = as_factor(country),
+         number_of_species = as.numeric(n)) %>% 
+  mutate(country = fct_reorder(country, number_of_species,
+                               .desc = TRUE))
+
+extinct_country_top10 <- extinct_country_tidy %>% 
+  top_n(10) %>% 
+  mutate(country = fct_reorder(country, number_of_species,
+                               .desc = FALSE))
+```
+
+```{r country_plot}
+ggplot(data = extinct_country_top10, 
+       aes(x = number_of_species, y = country)) +
+  geom_col(aes(fill = country), 
+           show.legend = FALSE)+
+  geom_text(aes(label = paste0(number_of_species)),
+            hjust = "inward") +
+  labs(x = "Number of Extinct Category Species",
+       y = "",
+       title = "Top 10 Countries of Extinct Plant Species")+
+  theme_classic()
+
+```
+
+
+```{r threats}
+threats_tidy <- threats %>% 
+  filter(red_list_category == "Extinct") %>% 
+  count(continent, group) -> threats_count
+
+# ggplot(threats_count, aes(fill = group, values = n))+
+#   geom_waffle(color = "white", size = .25, 
+#               n_rows = 10, flip = TRUE)+
+#   facet_wrap(~continent, nrows = 1, 
+#              strip.position = "bottom")
+```
+
