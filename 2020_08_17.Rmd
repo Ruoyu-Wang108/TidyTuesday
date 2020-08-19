@@ -62,13 +62,62 @@ ggplot(data = extinct_country_top10,
 
 ```{r threats}
 threats_tidy <- threats %>% 
-  filter(red_list_category == "Extinct") %>% 
-  count(continent, group) -> threats_count
+  filter(red_list_category == "Extinct") 
 
 # ggplot(threats_count, aes(fill = group, values = n))+
-#   geom_waffle(color = "white", size = .25, 
+#   geom_waffle(color = "white", size = .25,
 #               n_rows = 10, flip = TRUE)+
-#   facet_wrap(~continent, nrows = 1, 
-#              strip.position = "bottom")
+#   facet_wrap(~continent, nrow = 1,
+#              strip.position = "bottom") +
+#   scale_x_discrete() + 
+#   scale_y_continuous(labels = function(x) x * 10, # make this multiplyer the same as n_rows
+#                      expand = c(0,0)) +
+#   labs(
+#     title = "Faceted Waffle Bar Chart",
+#     subtitle = "{dplyr} storms data",
+#     x = "Year",
+#     y = "Count"
+#   ) +
+#   theme_minimal(base_family = "Roboto Condensed") +
+#   theme(panel.grid = element_blank(), axis.ticks.y = element_line()) +
+#   guides(fill = guide_legend(reverse = TRUE))
 ```
+
+ unique(threats$group)
+[1] "Flowering Plant" 
+[2] "Ferns and Allies"
+[3] "Cycad"           
+[4] "Mosses"          
+[5] "Algae"           
+[6] "Conifer"
+
+```{r FloweringPlant, fig.width=10}
+flower_threats <- threats_tidy %>% 
+  filter(group == "Flowering Plant",
+         threatened == "1") %>% 
+  count(continent, threat_type)
+
+ggplot(flower_threats, aes(fill = threat_type, values = n))+
+  geom_waffle(color = "white", size = .25,
+              n_rows = 10, flip = TRUE)+
+  facet_wrap(~continent, nrow = 1,
+             strip.position = "bottom") +
+  scale_x_discrete() +
+  scale_y_continuous(labels = function(x) x * 10, # make this multiplyer the same as n_rows
+                     expand = c(0,0)) +
+  labs(
+    title = "Extinct Flowering Plants and their threats",
+    x = "Continent of Species Originated",
+    y = "Count",
+    fill = "Threat Type"
+  ) +
+  theme_minimal(base_family = "Times New Roman") +
+  theme(panel.grid = element_blank(), axis.ticks.y = element_line()) +
+  guides(fill = guide_legend(reverse = TRUE))
+```
+
+
+
+
+
 
